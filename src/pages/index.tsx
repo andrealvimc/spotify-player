@@ -7,28 +7,32 @@ import { useEffect } from "react";
 import { Player } from "../components/Player";
 import { SidebarLeft } from "../components/SidebarLeft";
 import { MainLayout } from "../layouts/MainLayout";
+import { ApiClient } from "../services/api";
 
-export default function Home() {
+import { Playlist } from "../types/interfaces";
+
+type Props = {
+  playlists: Playlist[]
+}
+
+export default function Home({ playlists }: Props) {
   const { data: session } = useSession()
+  const api = ApiClient();
 
   // // @ts-ignore
-  // useEffect(async (): any => {
-  //   const { data } = await axios.get(`https://api.spotify.com/v1/users/${session?.user.id}/playlists`, {
-  //     headers: {
-  //       'Authorization': `Bearer ${session?.user.accessToken}`
-  //     }
-  //   })
-  //   console.log(data)
-  // }, [])
+  // useEffect(() => {
+  //   api.get(`https://api.spotify.com/v1/users/${session?.user.id}/playlists`).then((res) => {
+  //     console.log(res.data.items)
+  //   }).catch((err) => console.log(err))
 
-
+  // }, [session])
 
 
 
   return (
     <MainLayout
       player={<Player />}
-      sidebarLeft={<SidebarLeft />}
+      sidebarLeft={<SidebarLeft playlists={playlists} />}
       sidebarRight={<div>sidebarRight</div>}
     >
       <div className="p-8 text-[white]">
@@ -52,6 +56,7 @@ export default function Home() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const api = ApiClient();
   const session = await getSession({ req: context.req })
 
   if (!session || !session.user.id) {
@@ -63,10 +68,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
 
+  // TODO: GET PLAYLIST FROM API
+  // try {
+  //   const { data, } = await api.get(`https://api.spotify.com/v1/users/${session?.user.id}/playlists`)
+  //   // console.log(request)
+  //   return {
+  //     props: {
+  //       playlists: data.items
+  //     }
+  //   }
+  // } catch (err) {
+  //   console.log(err)
+  // }
+
 
 
   return {
-    props: {}
+    props: {
+      playlists: []
+    }
   }
 }
 

@@ -1,8 +1,12 @@
 import Image from "next/image"
 import { Books, House, MagnifyingGlass } from "phosphor-react"
+import { Playlist } from "../../types/interfaces"
 
+type Props = {
+  playlists: Playlist[];
+}
 
-export const SidebarLeft = () => {
+export const SidebarLeft = ({ playlists }: Props) => {
 
   return (
     <div>
@@ -45,9 +49,9 @@ export const SidebarLeft = () => {
       <div className="[separator] h-[1px] bg-neutral-1 bg-opacity-20 mx-4 flex shadow-2xl"></div>
 
       <div className="playlists flex-1 max-h-[calc(100vh-252px-100px)] px-4 my-2 flex flex-col gap-1 w-full overflow-y-auto">
-        {[1, 2, 3, 4, 4, 3, 3, 3, 3, 35, 3, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 'alvim', 4, 4, 4, 4, 4, 4, 4, 4, 100].map((item, index) => {
+        {playlists.map((playlist, index) => {
           return (
-            <div className="text-neutral-1 text-sm mb-1" key={index}>{item}</div>
+            <div className="text-neutral-1 text-sm mb-1" key={playlist.id}>{playlist.name}</div>
           )
         })}
       </div>
