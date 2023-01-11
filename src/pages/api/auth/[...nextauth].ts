@@ -3,6 +3,7 @@ import NextAuth from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 
 export const authOptions = {
+  secret: 'ALVIM-GOSTOSTO',
   providers: [
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID as string,
