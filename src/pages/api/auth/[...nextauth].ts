@@ -1,15 +1,42 @@
-
-import NextAuth from "next-auth"
+import axios from "axios";
+import NextAuth from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 
 export const authOptions = {
-  // Configure one or more authentication providers
   providers: [
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID || "",
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET|| ""
-    })
-    // ...add more providers here
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET || "",
+      authorization:
+        "https://accounts.spotify.com/authorize?scope=user-read-email,user-library-read,user-read-private",
+    }),
   ],
-}
-export default NextAuth(authOptions)
+  callbacks: {
+    async jwt({ token, account }: any) {
+      if (account) {
+        token.id = account.id;
+        token.accessToken = account.access_token;
+        token.refreshToken = account.refresh_token;
+        
+        try {
+          const {data} = await axios.get('https://api.spotify.com/v1/me', {
+            headers: { 
+              'Authorization': 'Bearer ' + account.access_token,
+            }
+          })
+          token.id = data.id
+          
+        } catch (err) {
+          throw new Error()
+        }
+
+      }
+      return token;
+    },
+    session({ session, token }: any) {
+      session.user = token;
+      return session;
+    },
+  },
+};
+export default NextAuth(authOptions);
