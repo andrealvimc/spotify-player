@@ -22,7 +22,7 @@ export const ApiClient = () => {
         },
         (error) => {
             // TODO: TESTAR ISSO
-            window.location.href = '/api/auth/signin'
+            // window.location.href = '/api/auth/signin'
             console.log(`error`, error)
         }
     )
